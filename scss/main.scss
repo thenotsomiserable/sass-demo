@@ -1,0 +1,11 @@
+@use 'config';
+@use 'helpers';
+@forward 'editor';
+
+body {
+  color: config.$color-black;
+}
+
+.icon {
+    @extend %icon;
+}

@@ -1,0 +1,182 @@
+@use 'config';
+
+/* Helper functions */
+@function rem($pixels) {
+    $font-calc: math.div($pixels, $font-size-num);
+    @return #{$font-calc}rem;
+}
+
+@mixin aspect($width: 16, $height: 9) {
+    aspect-ratio: math.div($width, $height);
+    @supports not (aspect-ratio: math.div($width, $height)) {
+        &::before {
+            content: '';
+            float: left;
+            padding-top: calc((#{$height} / #{$width}) * 100%);
+        }
+        &::after {
+            content: '';
+            display: block;
+            clear: both;
+        }
+    }
+}
+
+/* Helper classes */
+// Screenreader only content
+.sronly {
+    position: absolute;
+    left: -999999px;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0,0,0,0);
+    border: 0;
+    transition: none;
+
+    &-focusable {
+        border: 0;
+        clip: rect(0,0,0,0);
+        height: 1px;
+        left: -999999px;
+        margin: -1px;
+        overflow: hidden;
+        padding: 0;
+        position: absolute;
+        transition: none;
+        width: 1px;
+
+        &:focus {
+            border: auto;
+            clip: auto;
+            height: auto;
+            left: auto;
+            margin: auto;
+            overflow: auto;
+            padding: auto;
+            position: relative;
+            width: auto;
+
+            &.skiptomain {
+                background: config.$color-white;
+                clip: auto;
+                color: black;
+                height: auto;
+                left: 5px;
+                margin: 0;
+                position: absolute;
+                top: 5px;
+                width: auto;
+                z-index: 1;
+            }
+        }
+    }
+}
+
+// Flexible blocks structure
+.flexibleblocks {
+    &-block {
+        margin-bottom: 30px;
+        @media (min-width: config.$lg) {
+            margin-bottom: 80px;
+        }
+        &.__nomargin {
+            margin-bottom: 0;
+        }
+        &.__smallmargin {
+            margin-bottom: 15px;
+            @media (min-width: config.$lg) {
+                margin-bottom: 30px;
+            }
+        }
+        &.__mediummargin { // same as no classes (default)
+            margin-bottom: 30px;
+            @media (min-width: config.$lg) {
+                margin-bottom: 80px;
+            }
+        }
+        &.__largemargin {
+            margin-bottom: 50px;
+            @media (min-width: config.$lg) {
+                margin-bottom: 150px;
+            }
+        }
+    }
+}
+
+/* Helper extenders */
+%icon {
+    display: inline-block;
+    text-transform: none;
+    vertical-align: middle;
+    font-family: icomoon;
+    font-size: 26px;
+    color: config.$color-black;
+    font-weight: normal;
+    font-style: normal;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    speak: none;
+    transition: all 0.3s;
+}
+
+[class^="icon-"], [class*=" icon-"],
+.icon {
+    @extend %icon;
+}
+
+%overlay {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: config.$color-black;
+    opacity: 0.4;
+    transition: all 0.3s;
+}
+
+%bgcover {
+    background-position: center center;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+%objectfitcontain {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center;
+}
+
+%objectfitcover {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+
+%section-start-background {
+    background-image: url('/images/background/background-top.svg');
+    background-position: top left;
+    background-repeat: no-repeat;
+    background-size: 40%;
+}
+
+%section-end-background {
+    background-image: url('/images/background/background-bottom.svg');
+    background-position: bottom right;
+    background-repeat: no-repeat;
+    background-size: 40%;
+}
+
+img[data-object-fit="cover"] {
+    @extend %objectfitcover;
+}
+
+img[data-object-fit="contain"] {
+    @extend %objectfitcontain;
+}
